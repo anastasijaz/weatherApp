@@ -1,3 +1,4 @@
+let now = new Date();
 let currentDate = document.querySelector(".currentDate");
 let days = ["Sun", "Mon", "Tues", "Wed", "Thurs", "Fri", "Sat"];
 let months = [
@@ -44,6 +45,30 @@ function searchLocation(position) {
   let url = `https://api.openweathermap.org/data/2.5/weather?lat=${lat}&lon=${long}&appid=${apiKey}&units=metric`;
   axios.get(url).then(displayWeatherCondition);
 }
+function getCurrentPositon(event) {
+  event.preventDefault();
+  navigator.geolocation.getCurrentPosition(searchLocation);
+}
+function displayWeatherCondition(response) {
+  document.querySelector("#currentCity").innerHTML = response.data.name;
+  document.querySelector("#sun").innerHTML = ` ${Math.round(
+    response.data.main.temp
+  )}°C`;
+  document.querySelector("#windSpeed").innerHTML = `${Math.round(
+    response.data.wind.speed
+  )} km/h`;
+  document.querySelector("#humidityPercent").innerHTML = `
+    ${response.data.main.humidity} %`;
+  document.querySelector("#description").innerHTML =
+    response.data.weather[0].main;
+}
+
+//Buttons
+let cityBttn = document.querySelector("#location");
+cityBttn.addEventListener("click", getCurrentPositon);
+
+let searchBttn = document.querySelector("#search-form");
+searchBttn.addEventListener("submit", searchCity);
 
 function getCurrentPositon(event) {
   event.preventDefault();
